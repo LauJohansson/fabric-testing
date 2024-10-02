@@ -16,17 +16,21 @@ def upload_folder_to_onelake(
 ) -> str:
     """
     Uploads the contents of the temporary folder to
-    OneLake DataLake using the provided token.
+    OneLake DataLake.
 
     The target directory is defined as:
+        - 'fabric-testing'
         - _uuid: A generated UUID
         - _timestamp: Current timestamp in 'ddmmyyyy-hhmm' format
         - _test_folder: Combined _timestamp and _uuid
+
 
     Args:
         temp_folder (str): The path to the local folder containing the files to upload.
         workspace_name (str): The name of the file system (equivalent to a container).
         lakehouse_name (str): The name of the lakehouse.
+        custom_folder (str, optional): A custom folder name for the destination.
+            If not provided, a folder name is generated using a UUID and timestamp.
 
     Raises:
         RuntimeError: If any file upload fails.
@@ -95,11 +99,22 @@ def upload_file_to_onelake(
     """
     Uploads a single file to OneLake's DataLake.
 
+    This function uploads a specific file from a local directory
+    to a designated path in OneLake. It creates a DataLake file client
+    and handles the file upload to the OneLake storage.
+
     Args:
-        file_system_client (FileSystemClient): The client for the OneLake file system.
-        destination_path (str): The target path in OneLake to upload the file.
-        local_file_path (str): The path to the local file to be uploaded.
+        file_system_client (FileSystemClient):
+            The client for interacting with the OneLake file system.
+        destination_path (str):
+            The target path in OneLake where the file will be uploaded.
+        local_file_path (str):
+            The path to the local file to be uploaded.
+
+    Raises:
+        RuntimeError: If the file upload fails due to any exception.
     """
+
     try:
         print(f"Creating DataLake file client for path: {destination_path}")
         # Create a DataLake file client to interact with the destination path
