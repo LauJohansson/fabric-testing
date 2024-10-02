@@ -1,0 +1,28 @@
+name: PR Workflow
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint_and_format:
+    uses: ./.github/workflows/lint-and-format.yml
+
+  unit_tests_ubuntu:
+    needs: lint_and_format
+    uses: ./.github/workflows/unittest.yml
+    with:
+      # Pass any additional parameters if needed
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+  unit_tests_windows:
+    needs: lint_and_format
+    uses: ./.github/workflows/unittest.yml
+    with:
+      # Pass any additional parameters if needed
+    strategy:
+      matrix:
+        os: [windows-latest]

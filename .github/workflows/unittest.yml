@@ -1,0 +1,42 @@
+name: Unit Test
+
+on:
+  workflow_call:
+
+jobs:
+  unit_tests:
+    runs-on: ${{ matrix.os }}  # Use the OS passed in from the calling workflow
+    defaults:
+      run:
+        shell: pwsh # Use PowerShell as the shell for both OSs
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Python 3.11
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      # Upgrade pip
+      - name: Upgrade pip
+        run: |
+          pip install --upgrade pip
+
+      # Load dependencies
+      - name: Load Dependencies
+        run: |
+          pip install -r ${{ github.workspace }}/requirements-dev.txt
+
+      # Install fabric-testing (editable mode)
+      - name: Install fabric-testing
+        run: |
+          pip install -e .
+
+      # Run Unit Tests
+      - name: Run Unit Tests
+        run: |
+          python -m pytest ${{ github.workspace }}/tests

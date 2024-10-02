@@ -1,0 +1,47 @@
+name: Lint and Format
+
+on:
+  workflow_call:
+
+jobs:
+  lint_and_format:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: pwsh # Use PowerShell as the shell
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Python 3.11
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      # Install ruff using pip
+      - name: Pip install ruff
+        run: |
+          pip install ruff==0.4.4
+
+      # Run ruff linting check on src
+      - name: Run ruff linting check on src
+        run: |
+          ruff check ${{ github.workspace }}/src/
+
+      # Run ruff format check on src
+      - name: Run ruff format check on src
+        run: |
+          ruff format ${{ github.workspace }}/src/ --check
+
+      # Run ruff linting check on tests
+      - name: Run ruff linting check on tests
+        run: |
+          ruff check ${{ github.workspace }}/tests/
+
+      # Run ruff format check on tests
+      - name: Run ruff format check on tests
+        run: |
+          ruff format ${{ github.workspace }}/tests/ --check
