@@ -19,10 +19,35 @@ def upload_notebook(
     token_string: str,
 ):
     """
+    Uploads a notebook to a specified workspace in the Fabric API.
 
-    https://learn.microsoft.com/en-us/rest/api/fabric/notebook/items/create-notebook?tabs=HTTP
+    This function prepares and uploads a notebook by converting the notebook
+     and platform definitions into base64-encoded format. It sends a POST request
+     to the Fabric API to create a notebook within the specified
+    workspace. If the notebook upload is accepted for provisioning (HTTP 202),
+    it polls the notebook creation status until it completes.
 
+    Args:
+        display_name (str): The display name of the notebook.
+        description (str): A brief description of the notebook.
+        notebook_definition (str): The notebook definition content in JSON format.
+        platform_definition (str): The platform definition content in JSON format.
+        workspace_id (str): The ID of the workspace where the notebook is uploaded.
+        token_string (str): The bearer token used to authenticate the API request.
+
+    Returns:
+        dict: A dictionary containing the status code and response
+            content of the API request, or the result of polling the
+            upload status if the notebook provisioning is in progress.
+
+    Raises:
+        Exception: If the notebook upload fails with a status code
+                    other than 201 or 202.
+
+    See Also:
+        Fabric API documentation: https://learn.microsoft.com/en-us/rest/api/fabric/notebook/items/create-notebook?tabs=HTTP
     """
+
     print("Prepare uploading notebook...")
     print(f"    Display Name: {display_name}")
     print(f"    To workspace with id: {workspace_id}")
@@ -100,7 +125,30 @@ def upload_notebook(
 
 
 def poll_notebook_upload_status(location_url: str, retry_after: int, token_string: str):
-    """Polls the notebook creation status until it's completed."""
+    """
+    Polls the status of a notebook creation until it is completed or fails.
+
+    This function sends repeated GET requests to a given location URL to check
+    the progress of the notebook creation. The polling is done at intervals
+    specified by the `Retry-After` header (or a default interval).
+    The function will continue to poll until the creation reaches 100% completion.
+
+    Args:
+        location_url (str):
+            The URL from which to fetch the status of the notebook creation.
+        retry_after (int):
+            The number of seconds to wait between polling attempts.
+        token_string (str):
+            The bearer token used to authenticate the API request.
+
+    Returns:
+        requests.Response: The final response object once
+                            the notebook creation is complete.
+
+    Raises:
+        Exception: If the API returns unexpected status
+                codes or an error occurs during polling.
+    """
 
     def _retrieve_percent_complete(response_content: bytes):
         try:

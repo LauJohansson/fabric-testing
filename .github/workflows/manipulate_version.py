@@ -1,15 +1,10 @@
-"""
-Replace whatever version is in src/__init__.py
-with a version that is larger than whatever is already published on test.pypi.org
-This facilitates continuous release.
-"""
-
 import json
+import re
 from urllib.request import urlopen
 
 from packaging.version import parse
 
-version_file_path = "src/VERSION.txt"
+init_file_path = "src/fabrictesting/__init__.py"
 
 
 def main():
@@ -21,16 +16,36 @@ def main():
     else:
         version = f"{pypi_v.major}.{pypi_v.minor}.{pypi_v.micro+1}"
 
-    with open(version_file_path, "w") as f:
-        f.write(version)
+    # Update the __version__ in __init__.py
+    update_version_in_init(version)
 
 
 def get_local_version():
-    with open(version_file_path) as f:
-        # clean up the version
-        v = parse(f.read())
-        v = parse(v.base_version)  # remove any suffices
-        return v
+    with open(init_file_path) as f:
+        content = f.read()
+        # Use regex to extract the version number
+        version_match = re.search(r"__version__\s*=\s*['\"]([^'\"]+)['\"]", content)
+        if version_match:
+            v = parse(version_match.group(1))
+            return v
+        else:
+            return parse("0.0.0")
+
+
+def update_version_in_init(version):
+    with open(init_file_path, "r") as f:
+        content = f.read()
+
+    # Use regular string formatting to build the new version line
+    new_content = re.sub(
+        r"__version__\s*=\s*['\"][^'\"]+['\"]", f'__version__ = "{version}"', content
+    )
+
+    print("Writes version:")
+    print(new_content)
+
+    with open(init_file_path, "w") as f:
+        f.write(new_content)
 
 
 def get_test_pypi_version():

@@ -5,11 +5,26 @@ import requests
 
 def list_notebooks(*, workspace_id: str, token_string: str):
     """
+    Lists all notebooks within a specific workspace by calling the Fabric API.
 
-    :return:
+    This function sends an authenticated GET request to the Fabric API to retrieve
+    a list of notebooks within the given workspace.
+    It extracts and returns a dictionary that maps notebook display names
+    to their corresponding IDs.
 
+    Args:
+        workspace_id (str): The ID of the workspace from which to list notebooks.
+        token_string (str): The bearer token used for authenticating the API request.
 
-    https://learn.microsoft.com/en-us/rest/api/fabric/notebook/items/list-notebooks?tabs=HTTP
+    Returns:
+        dict: A dictionary where the keys are notebook display names
+                and the values are their IDs.
+
+    Raises:
+        Exception: If the API call fails or if the response status is not 200.
+
+    See Also:
+        Fabric API documentation: https://learn.microsoft.com/en-us/rest/api/fabric/notebook/items/list-notebooks?tabs=HTTP
     """
 
     header = {
@@ -41,6 +56,24 @@ def list_notebooks(*, workspace_id: str, token_string: str):
 
 
 def get_notebook_id(*, notebook_name: str, workspace_id: str, token_string):
+    """
+    Retrieves the ID of a specific notebook by name within a given workspace.
+
+    This function calls `list_notebooks` to get all available notebooks
+    in the specified workspace, then attempts to return the ID of the notebook
+    with the given name. If the notebook is not found, an exception is raised.
+
+    Args:
+        notebook_name (str): The name of the notebook to search for.
+        workspace_id (str): The ID of the workspace where the notebook is located.
+        token_string (str): The bearer token used for authenticating the API request.
+
+    Returns:
+        str: The ID of the notebook if found.
+
+    Raises:
+        Exception: If the notebook is not found in the workspace.
+    """
     workspaces_dict = list_notebooks(
         workspace_id=workspace_id, token_string=token_string
     )

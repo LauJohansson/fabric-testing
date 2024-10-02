@@ -16,23 +16,49 @@ def load_default_notebook(
     unittest_folder_name: str = "tests",
 ) -> str:
     """
-    Load the notebook-content.py file, replace placeholders,
-        and return the modified content as a string.
+    Loads and modifies the default notebook content
+    by replacing placeholder values with actual parameters.
+
+    This function reads the content of a notebook file (in `.ipynb` format)
+    and replaces certain placeholderswith the provided values for lakehouse IDs,
+    workspace names, and file paths. It also manages optional
+    installation of dependencies via pip by replacing or removing
+    the relevant installation commands based
+    on whether `wheel_name` or `requirements_file_name` is provided.
 
     Args:
-        lakehouse_id (str): The ID of the lakehouse to replace in the notebook.
-        default_lakehouse_name (str): The default lakehouse name
-                                      to replace in the notebook.
-        default_lakehouse_workspace_id (str): The default lakehouse workspace ID
-                                    to replace in the notebook.
+        lakehouse_id (str):
+            The identifier for the lakehouse.
+        default_lakehouse_name (str):
+            The default name of the lakehouse.
+        default_lakehouse_workspace_id (str):
+            The workspace ID associated with the default lakehouse.
+        workspace_name (str):
+            The name of the workspace where the notebook is submitted.
+        submit_folder (str):
+            The folder path where submission-related files are stored.
+        wheel_name (str, optional):
+            The name of the wheel file for dependency installation. If not provided,
+            the pip install command for the wheel will be removed from the notebook.
+            Defaults to None.
+        requirements_file_name (str, optional):
+            The name of the requirements file for dependency installation.
+            If not provided, the pip install command for the requirements
+            file will be removed from the notebook.
+            Defaults to None.
+        unittest_folder_name (str, optional):
+            The folder name where unit tests are located. Defaults to "tests".
 
     Returns:
-        str: The notebook content with the placeholders replaced.
+        str: The notebook content with placeholders replaced by the provided values.
 
+    Raises:
+        FileNotFoundError: If the notebook file cannot be found at the expected path.
 
-    See the notebook definition here:
-    https://learn.microsoft.com/en-us/rest/api/fabric/articles/item-management/definitions/notebook-definition
+    See Also:
+        Notebook definition: https://learn.microsoft.com/en-us/rest/api/fabric/articles/item-management/definitions/notebook-definition
     """
+
     # Get the current directory of the create.py file
     # (which should be the "notebook" folder)
     current_dir = os.path.dirname(__file__)
@@ -104,6 +130,28 @@ def convert_notebook_into_inlinebase64(notebook_content: str) -> str:
 
 
 def create_platform_file_content(*, display_name: str, description: str = "") -> str:
+    """
+    Creates a JSON-formatted string representing platform file content with metadata
+    and configuration.
+
+    This function generates a JSON object with a schema reference,
+    metadata for a notebook (including display name and description),
+    and a configuration that includes a unique logical ID.
+    The metadata and configuration adhere to the Microsoft Fabric platform
+    properties schema.
+
+    Args:
+        display_name (str): The display name for the notebook in the platform.
+        description (str, optional): A brief description of the notebook.
+        Defaults to an empty string.
+
+    Returns:
+        str: A JSON-formatted string representing the platform file content,
+        including metadata and a unique logical ID.
+
+
+
+    """
     _uuid = uuid.uuid4().hex
 
     _content = {

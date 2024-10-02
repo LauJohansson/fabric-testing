@@ -43,6 +43,26 @@ def get_personal_fabric_token(tenant_id: str = None) -> str:
 
 
 def get_client_fabric_token(tenant_id: str, client_id: str, client_secret: str) -> str:
+    """
+    Retrieves an OAuth 2.0 access token
+    from Azure AD for the specified client credentials.
+
+    This function uses the Azure Identity ClientSecretCredential to authenticate with
+    Azure Active Directory (AD) and obtain an access token that can be used to access
+    the Fabric API.
+
+    Args:
+        tenant_id (str): The Azure AD tenant (directory) ID.
+        client_id (str): The client (application) ID registered in Azure AD.
+        client_secret (str): The client secret associated with the application.
+
+    Returns:
+        str: The access token retrieved from Azure AD to authenticate API requests.
+
+    Raises:
+        Exception: If the token string is None, an exception is raised.
+    """
+
     scope = "https://api.fabric.microsoft.com/.default"
     client_secret_credential_class = ClientSecretCredential(
         tenant_id=tenant_id, client_id=client_id, client_secret=client_secret
