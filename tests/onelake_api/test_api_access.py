@@ -5,10 +5,11 @@ from fabrictesting.onelake_api.api_access import get_service_client
 
 
 class TestGetServiceClient(unittest.TestCase):
-
     @patch("fabrictesting.onelake_api.api_access.DataLakeServiceClient")
     @patch("fabrictesting.onelake_api.api_access.DefaultAzureCredential")
-    def test_get_service_client_success(self, mock_default_credential, mock_datalake_client):
+    def test_get_service_client_success(
+        self, mock_default_credential, mock_datalake_client
+    ):
         """
         Test get_service_client successfully creates a DataLakeServiceClient.
         """
@@ -23,16 +24,19 @@ class TestGetServiceClient(unittest.TestCase):
         # Act: Call the function
         result = get_service_client()
 
-        # Assert: Ensure the DataLakeServiceClient was created with the expected arguments
+        # Assert: Ensure the DataLakeServiceClient
+        # was created with the expected arguments
         mock_datalake_client.assert_called_once_with(
             "https://onelake.dfs.fabric.microsoft.com",
-            credential=mock_credential_instance
+            credential=mock_credential_instance,
         )
         self.assertEqual(result, mock_service_client_instance)
 
     @patch("fabrictesting.onelake_api.api_access.DataLakeServiceClient")
     @patch("fabrictesting.onelake_api.api_access.DefaultAzureCredential")
-    def test_get_service_client_failure(self, mock_default_credential, mock_datalake_client):
+    def test_get_service_client_failure(
+        self, mock_default_credential, mock_datalake_client
+    ):
         """
         Test get_service_client when DataLakeServiceClient creation fails.
         """
@@ -50,9 +54,9 @@ class TestGetServiceClient(unittest.TestCase):
         self.assertIn("Failed to create service client", str(context.exception))
         mock_datalake_client.assert_called_once_with(
             "https://onelake.dfs.fabric.microsoft.com",
-            credential=mock_credential_instance
+            credential=mock_credential_instance,
         )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

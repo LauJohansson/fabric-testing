@@ -1,2 +1,4 @@
 azure-storage-file-datalake
 azure-identity
+pytest
+requests

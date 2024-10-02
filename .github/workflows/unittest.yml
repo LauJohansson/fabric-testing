@@ -2,10 +2,14 @@ name: Unit Test
 
 on:
   workflow_call:
+    inputs:
+      os:
+        type: string
+        required: true  # Ensure that the OS input is provided
 
 jobs:
   unit_tests:
-    runs-on: ${{ matrix.os }}  # Use the OS passed in from the calling workflow
+    runs-on: ${{ inputs.os }}  # Use the OS passed in from the calling workflow
     defaults:
       run:
         shell: pwsh # Use PowerShell as the shell for both OSs
@@ -40,3 +44,12 @@ jobs:
       - name: Run Unit Tests
         run: |
           python -m pytest ${{ github.workspace }}/tests
+
+      # Run CLI commands -h
+      - name: Run Submit CLI
+        run: |
+          fabric-testing-submit -h
+
+      - name: Run Fetch CLI
+        run: |
+          fabric-testing-fetch -h
