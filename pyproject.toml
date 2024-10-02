@@ -1,0 +1,77 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fabric-testing"
+#version = {file = "src/VERSION.txt"}
+dynamic = ["version", "readme"]
+description = "Testing functionalities for Microsoft Fabric"
+#readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.11"
+license = {file = "LICENSE"}
+authors = [
+    { name = "LauJohansson" }
+]
+keywords = ["Microsoft", "Fabric", "testing"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent" # the intention is for it to be at least
+]
+urls = { "Homepage" = "https://github.com/LauJohansson/fabric-testing" }
+dependencies= ["setuptools", "requests","pytest",]
+
+[project.optional-dependencies]
+dev = ["ruff", "pytest",]
+
+
+[project.entry-points."console_scripts"]
+fabric-testing-submit = "fabrictesting.test_job.submit:main"
+fabric-testing-fetch = "fabrictesting.test_job.fetch:main"
+
+[tool.setuptools.dynamic]
+version = {attr = "fabrictesting.__version__"}
+readme = {file = ["README.md"]}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ["*.yml", "*.ipynb"]
+
+[tool.flake8]
+exclude = [".git", "__pycache__", "docs", "build", "dist", "venv"]
+max-line-length = 88
+extend-ignore = ["E203", "E501"]
+per-file-ignores = { "__init__.py" = ["F401"] }
+
+[tool.black]
+line-length = 88
+
+[tool.isort]
+profile = "black"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+
+##########################
+######## ruff ############
+##########################
+
+
+[tool.ruff]
+line-length = 88
+indent-width = 4
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+[tool.ruff.lint]
+select = ["E", #pycodestyle
+    "F", # Pyflakes
+    "I", # isort
+    "BLE"]
+ignore = ["E402"]
