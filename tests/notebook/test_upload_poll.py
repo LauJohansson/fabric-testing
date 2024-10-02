@@ -25,7 +25,8 @@ class TestPollNotebookUploadStatus(unittest.TestCase):
             self, mock_print, mock_sleep, mock_get
         ):
             """
-            Test poll_notebook_upload_status where the notebook creation progress is less than 100%.
+            Test poll_notebook_upload_status where the notebook
+            creation progress is less than 100%.
             It should retry after the specified time and then simulate completion.
             """
             # Arrange: Mock in-progress response (percentComplete < 100)
@@ -42,7 +43,8 @@ class TestPollNotebookUploadStatus(unittest.TestCase):
                 {"percentComplete": 100}
             ).encode("utf-8")
 
-            # First two calls will return "in-progress", third call will return "completed"
+            # First two calls will return "in-progress",
+            # third call will return "completed"
             mock_get.side_effect = [
                 mock_in_progress_response,
                 mock_in_progress_response,
@@ -56,7 +58,8 @@ class TestPollNotebookUploadStatus(unittest.TestCase):
                 token_string="test_token",
             )
 
-            # Assert: Ensure that the function returns the completed result after retries
+            # Assert: Ensure that the function
+            # returns the completed result after retries
             self.assertEqual(result.status_code, 200)
             self.assertEqual(json.loads(result.content), {"percentComplete": 100})
 
@@ -133,7 +136,8 @@ class TestPollNotebookUploadStatus(unittest.TestCase):
             token_string="test_token",
         )
 
-        # Assert: Ensure that the function breaks out and returns the response with the unexpected status code and content
+        # Assert: Ensure that the function breaks out
+        # and returns the response with the unexpected status code and content
         self.assertEqual(result.status_code, 500)
         self.assertEqual(result.content, b"Internal Server Error")
         mock_get.assert_called_once()

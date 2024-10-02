@@ -175,7 +175,8 @@ class TestSubmitArgsCombinations(unittest.TestCase):
     @patch("fabrictesting.test_job.submit.validate_args")
     def test_args_with_service_principal(self, mock_validate_args, mock_parse_args):
         """
-        Test parsing args when service_principal is True and both client_id and client_secret are provided.
+        Test parsing args when service_principal is True
+        and both client_id and client_secret are provided.
         """
         # Act
         args = submit_args()
@@ -210,7 +211,8 @@ class TestSubmitArgsCombinations(unittest.TestCase):
         Test args with service_principal=True but missing client_id and client_secret.
         This should trigger a validation error.
         """
-        # Act & Assert: Now SystemExit should be raised because validate_args will trigger a parser error
+        # Act & Assert: Now SystemExit should be raised because
+        # validate_args will trigger a parser error
         with self.assertRaises(SystemExit):  # argparse raises SystemExit on error
             submit_args()
 
@@ -258,7 +260,8 @@ class TestSubmitArgsCombinations(unittest.TestCase):
         test_args = [
             "--service-principal",
             "False",
-            # We intentionally do not provide required arguments like --tenant-id, --workspace-name, etc.
+            # We intentionally do not provide required arguments
+            # like --tenant-id, --workspace-name, etc.
         ]
 
         with patch("sys.argv", ["submit.py"] + test_args):
