@@ -2,8 +2,10 @@ name: PR Workflow
 
 on:
   pull_request:
-    branches:
-      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
 
 jobs:
   lint_and_format:
@@ -13,16 +15,10 @@ jobs:
     needs: lint_and_format
     uses: ./.github/workflows/unittest.yml
     with:
-      # Pass any additional parameters if needed
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
+      os: ubuntu-latest  # Pass the OS as an input
 
   unit_tests_windows:
     needs: lint_and_format
     uses: ./.github/workflows/unittest.yml
     with:
-      # Pass any additional parameters if needed
-    strategy:
-      matrix:
-        os: [windows-latest]
+      os: windows-latest  # Pass the OS as an input
