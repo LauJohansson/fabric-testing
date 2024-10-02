@@ -50,4 +50,7 @@ def get_client_fabric_token(tenant_id: str, client_id: str, client_secret: str) 
     access_token_class = client_secret_credential_class.get_token(scope)
     token_string = access_token_class.token
 
+    if not token_string:
+        raise Exception("Token string was none")
+
     return token_string

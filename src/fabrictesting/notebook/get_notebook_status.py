@@ -92,11 +92,16 @@ def poll_notebook_run_status(
 
     Args:
         fetch_url (str): The URL to poll for the job status.
+        https://api.fabric.microsoft.com/v1/workspaces/{workspaceId}/items/{itemId}/jobs/instances/{jobInstanceId}
         retry_after (int): The time to wait (in seconds) between polling attempts.
         token_string (str): The authorization token for the API.
 
     Returns:
         dict: The final status of the notebook job.
+
+    Todo:
+        Implement functionality to avoid infinity loop
+
     """
     headers = {"Authorization": f"Bearer {token_string}"}
 

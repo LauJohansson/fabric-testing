@@ -22,6 +22,14 @@ def list_notebooks(*, workspace_id: str, token_string: str):
         url=f"https://api.fabric.microsoft.com/v1/workspaces/{workspace_id}/notebooks",
         headers=header,
     )
+
+    # Raise an exception if the API call fails (non-2xx status code)
+    if response.status_code != 200:
+        raise Exception(
+            f"API call failed with status "
+            f"{response.status_code}: {response.content.decode('utf-8')}"
+        )
+
     response_json = json.loads(response.content)
 
     workspaces_dict = {
