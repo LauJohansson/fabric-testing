@@ -21,7 +21,7 @@ jobs:
       - name: Manipulate version
         run: |
           pip install packaging
-          python ./utilities/manipulate_version.py
+          python ./.github/utilities/manipulate_version.py
 
       - name: Install build dependencies
         run: |
