@@ -103,12 +103,17 @@ def poll_notebook_upload_status(location_url: str, retry_after: int, token_strin
     """Polls the notebook creation status until it's completed."""
 
     def _retrieve_percent_complete(response_content: bytes):
-        response_json = json.loads(response_content)
-        _percent_complete = response_json.get("percentComplete", None)
+        try:
+            response_json = json.loads(response_content)
+            _percent_complete = response_json.get("percentComplete", None)
 
-        if _percent_complete is None:
-            return "0"
-        return str(_percent_complete)
+            if _percent_complete is None:
+                return "0"
+            return str(_percent_complete)
+        except json.JSONDecodeError:
+            # Handle non-JSON responses like errors
+            print("Could not retrieve percenComplete value. Continues...")
+            return None
 
     headers = {
         "Content-Type": "application/json",
@@ -117,26 +122,34 @@ def poll_notebook_upload_status(location_url: str, retry_after: int, token_strin
 
     while True:
         response = requests.get(location_url, headers=headers)
-        percent_complete = _retrieve_percent_complete(response.content)
+        if response.status_code in [200, 202]:
+            percent_complete = _retrieve_percent_complete(response.content)
 
-        if percent_complete != "100":
-            print(f"Notebook creation is at {percent_complete}/100 %...")
-            print(f"Retrying after {retry_after} seconds...")
-            time.sleep(retry_after)
-        elif response.status_code == 200:
-            print(f"Notebook creation is at {percent_complete}/100 %!")
-            print("Notebook creation completed.")
-            return response
-        elif response.status_code == 202:
-            print(f"Notebook creation is at {percent_complete} percent...")
-            print("Notebook creation still in progress...")
+            if percent_complete != "100":
+                print(f"Notebook creation is at {percent_complete}/100 %...")
+                print(f"Retrying after {retry_after} seconds...")
+                time.sleep(retry_after)
+            elif response.status_code == 200:
+                print(f"Notebook creation is at {percent_complete}/100 %!")
+                print("Notebook creation completed.")
+                return response
+            elif response.status_code == 202:
+                print(f"Notebook creation is at {percent_complete} percent...")
+                print("Notebook creation still in progress...")
 
-            # Wait for the recommended time before retrying
-            print(f"Retrying after {retry_after} seconds...")
-            time.sleep(retry_after)
+                # Wait for the recommended time before retrying
+                print(f"Retrying after {retry_after} seconds...")
+                time.sleep(retry_after)
+            else:
+                print(
+                    f"Unexpected status code: {response.status_code},"
+                    f" details: {response.content}"
+                )
+                break
         else:
+            # For unexpected status codes, return the response and break the loop
             print(
-                f"Unexpected status code: {response.status_code},"
-                f" details: {response.content}"
+                f"Unexpected status code: {response.status_code}, "
+                f"details: {response.content}"
             )
-            break
+            return response  # Ensures the loop is exited for unexpected status codes
