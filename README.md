@@ -30,9 +30,8 @@ fabric-testing-fetch `
     --fetch-url-log-file-path <path-to-log-file>
 ```
 
-The interaction with OneLake use default azure loging settings. 
-
-Remember to login to the expected user (or spn):
+The interaction with OneLake use default azure login settings. 
+Therefore, remember to login to the expected user (or spn):
 
 ```powershell
 az login --tenant <tenant-id>
