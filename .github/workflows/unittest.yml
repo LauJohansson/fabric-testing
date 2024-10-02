@@ -44,3 +44,12 @@ jobs:
       - name: Run Unit Tests
         run: |
           python -m pytest ${{ github.workspace }}/tests
+
+      # Run CLI commands -h
+      - name: Run Submit CLI
+        run: |
+          fabric-testing-submit -h
+
+      - name: Run Fetch CLI
+        run: |
+          fabric-testing-fetch -h
