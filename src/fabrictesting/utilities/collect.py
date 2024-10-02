@@ -35,7 +35,6 @@ def create_temp_folder_with_files(
         shutil.copytree(tests_path, temp_tests_dir)
 
         if whl_path:
-            print("whhhhu")
             # Define the destination of whl
             temp_whl_path = Path(temp_dir) / Path(whl_path).name
             # Copy and rename the wheel file to 'custom.whl'
