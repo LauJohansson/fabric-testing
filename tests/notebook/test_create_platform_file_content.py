@@ -15,7 +15,9 @@ class TestCreatePlatformFileContent(unittest.TestCase):
         description = "This is a test notebook description."
 
         # Act: Call the function
-        result = create_platform_file_content(display_name, description)
+        result = create_platform_file_content(
+            display_name=display_name, description=description
+        )
 
         # Parse the result to JSON for easier inspection
         result_json = json.loads(result)
