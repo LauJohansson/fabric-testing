@@ -10,5 +10,6 @@ def validate_args(args, parser: argparse):
 
     if args.service_principal and (not args.client_id or not args.client_secret):
         parser.error(
-            "Expecting service principal but missing either --client-id or --client-secret."
+            "Expecting service principal "
+            "but missing either --client-id or --client-secret."
         )

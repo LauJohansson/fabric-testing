@@ -42,5 +42,6 @@ def get_notebook_id(*, notebook_name: str, workspace_id: str, token_string):
 
     except KeyError:
         raise Exception(
-            f"The notebook {notebook_name} was not found in the workspace {workspace_id}"
+            f"The notebook {notebook_name} was not found "
+            f"in the workspace {workspace_id}"
         )
