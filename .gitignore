@@ -1,0 +1,9 @@
+.idea
+/data
+/src/fabrictesting/test_script.py
+/src/fabrictesting/ljo_submit.py
+/src/fabrictesting/ljo_submit.ps1
+/src/fabrictesting/ljo_fetch.py
+/src/fabrictesting/ljo_fetch.ps1
+*.egg-info
+*pycache*
