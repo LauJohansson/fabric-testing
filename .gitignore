@@ -7,3 +7,4 @@
 /src/fabrictesting/ljo_fetch.ps1
 *.egg-info
 *pycache*
+/dist
