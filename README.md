@@ -1,7 +1,8 @@
 # fabric-testing
 **Author: Lau Johansson**
 
-![](/imgs/fabric_logo.png)
+![](https://debruyn.dev/2023/all-microsoft-fabric-icons-for-diagramming/Fabric_final_x256.png)
+
 
 This library enables you to deploy python tests to [Microsoft Fabric](https://www.microsoft.com/en-us/microsoft-fabric).<br>
 
@@ -97,7 +98,6 @@ fabric-testing-fetch `
 
 If you want to follow along more "interactively", you can find the test run in the [Fabric Monitor](https://app.fabric.microsoft.com/monitoringhub?experience=data-engineering):
 
-![](/imgs/monitor_logo.png)
 
 The interaction with OneLake use default azure login settings. 
 Therefore, remember to login to the expected user (or spn):
@@ -105,8 +105,6 @@ Therefore, remember to login to the expected user (or spn):
 ```powershell
 az login --tenant <tenant-id>
 ```
-
-
 
 ## How does it work?
 
