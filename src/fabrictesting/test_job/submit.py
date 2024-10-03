@@ -238,6 +238,7 @@ def submit(args) -> str:
 
 
 def main():
+    """the main function of the cli command 'submit'. Not to be used directly."""
     args = submit_args()
     submit(args)
 

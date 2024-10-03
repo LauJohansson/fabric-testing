@@ -96,6 +96,9 @@ fabric-testing-fetch `
     --fetch-url-log-file-path <path-to-log-file>
 ```
 
+If the notebook tests ran successfully (status code 200), then the CLI exitcode is 0.
+Otherwise -1. 
+
 If you want to follow along more "interactively", you can find the test run in the [Fabric Monitor](https://app.fabric.microsoft.com/monitoringhub?experience=data-engineering):
 
 

@@ -1,4 +1,5 @@
 import argparse
+import sys
 
 from fabrictesting.fabric_api.api_access import (
     get_client_fabric_token,
@@ -121,12 +122,18 @@ def fetch(args):
 
     _fetch_url = args.url or load_fetch_url(args.fetch_url_log_file_path)
 
-    poll_notebook_run_status(
+    result = poll_notebook_run_status(
         fetch_url=_fetch_url, retry_after=args.retry_after, token_string=_fabric_token
     )
 
+    if result.get("status_code", None) == 200:
+        sys.exit(0)
+    else:
+        sys.exit(-1)
+
 
 def main():
+    """the main function of the cli command 'fetch'. Not to be used directly."""
     args = fetch_args()
     fetch(args)
 
