@@ -3,19 +3,47 @@
 
 ![](/imgs/fabric_logo.png)
 
-This library enables you to deploy python test to [Microsoft Fabric](https://www.microsoft.com/en-us/microsoft-fabric).<br>
+This library enables you to deploy python tests to [Microsoft Fabric](https://www.microsoft.com/en-us/microsoft-fabric).<br>
+
+In short you can:
+* Tests: Deploy and run custom tests
+* Wheel: Deploy custom wheel that you want to test
+* Requirements: Deploy custom requirements for the tests
+
 With this CLI, it is possible to test functionalities like `CREATE TABLE` or `MERGE INTO`.<br>
 Also, working with Fabric built-in libraries like the `notebookutils`. <br>
 
-Now you can run tests like this:
+## Why do you need it?
+With this CLI, you can run tests like the one below. It will enable you to run on-cluster
+testing.
+
+This will especially help two scenarios:
+* CICD - automated testing: Submit and fetch tests in your Azure Pipelines / Github Workflows
+* In a local development setup (your own computer), where you develop using a IDE - you can now deploy tests directly into Fabric
+
+Lets say, you want to test some logic you have made, that creates a table and insert some data. 
+
+How can you test the following code for Fabric today?  (Without actually have a Fabric open)
+
 
 ```python
 import unittest
 import uuid
+from pyspark.sql import SparkSession
 
 
 class CreateTable(unittest.TestCase):
+    """
+    This is an example of interacting with the default lakehouse.
+    
+    """
     def test_create_table(self):
+        spark = SparkSession \
+        .builder \
+        .appName("fabric-testing example") \
+        .config("spark.some.config.option", "some-value") \
+        .getOrCreate()
+        
         _uuid = _uuid = uuid.uuid4().hex
 
         table_name = f"test_table_{_uuid}"
@@ -39,9 +67,9 @@ class CreateTable(unittest.TestCase):
 pip install fabric-testing
 ```
 
-## Usage
+## CLI Usage
 
-Deploy python tests to Fabric. You do not necessarily **need** add a wheel or requirements, 
+Deploy python tests to Fabric. You do not necessarily **need** to add a wheel or requirements, 
 maybe you just have some tests you want to run inside Fabric:
 
 ```powershell
@@ -67,12 +95,18 @@ fabric-testing-fetch `
     --fetch-url-log-file-path <path-to-log-file>
 ```
 
+If you want to follow along more "interactively", you can find the test run in the [Fabric Monitor](https://app.fabric.microsoft.com/monitoringhub?experience=data-engineering):
+
+![](/imgs/monitor_logo.png)
+
 The interaction with OneLake use default azure login settings. 
 Therefore, remember to login to the expected user (or spn):
 
 ```powershell
 az login --tenant <tenant-id>
 ```
+
+
 
 ## How does it work?
 
@@ -117,6 +151,8 @@ when these APIs support the identity. See the documentation:
 
 * Ensure that the lakehouse for the test-upload (OneLake) in the same workspace as where you execute the notebook runs
 * Referencing between test-files will cause import errors
+* The test notebook that gets uploaded uses `!pip` and not `%pip` - although Microsoft recommends the last one.
+  * This is due to challenges in activating inline-installation when running an on-demand job
 
 
 # Future improvements
@@ -132,7 +168,8 @@ Contributions are welcome! To contribute:
 - Submit a pull request
 
 Please ensure that your code follows the existing style and includes unit tests for any new features.
-See the `.github/workflows/pr.yml` to inspect which ruff format/linting checks are made, and which tests are executed.
+See the `pyproject.toml` or the `.github/workflows/pr.yml` to inspect which ruff format/linting checks are made, and which tests are executed.
+
 
 ## License
 
