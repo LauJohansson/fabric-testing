@@ -10,8 +10,8 @@ In short you can:
 * Wheel: Deploy custom wheel that you want to test
 * Requirements: Deploy custom requirements for the tests
 
-With this CLI, it is possible to test functionalities like `CREATE TABLE` or `MERGE INTO`.<br>
-Also, working with Fabric built-in libraries like the `notebookutils`. <br>
+With this CLI, it is possible to test functionalities like ``CREATE TABLE`` or ``MERGE INTO``.<br>
+Also, working with Fabric built-in libraries like the ``notebookutils``. <br>
 
 ## Why do you need it?
 With this CLI, you can run tests like the one below. It will enable you to run on-cluster
@@ -127,7 +127,7 @@ Fetch should be fully supported both User and Service Principal
 ### Submit
 Submit is only fully supported for User.
 
-Currently the Job scheduler API only support `User` identity.
+Currently the Job scheduler API only support ``User`` identity.
 
 Fabric-testing library are expected to work for service principals
 when these APIs support the identity. See the documentation:
@@ -151,7 +151,7 @@ when these APIs support the identity. See the documentation:
 
 * Ensure that the lakehouse for the test-upload (OneLake) in the same workspace as where you execute the notebook runs
 * Referencing between test-files will cause import errors
-* The test notebook that gets uploaded uses `!pip` and not `%pip` - although Microsoft recommends the last one.
+* The test notebook that gets uploaded uses ``!pip`` and not ``%pip`` - although Microsoft recommends the last one.
   * This is due to challenges in activating inline-installation when running an on-demand job
 
 
@@ -168,7 +168,7 @@ Contributions are welcome! To contribute:
 - Submit a pull request
 
 Please ensure that your code follows the existing style and includes unit tests for any new features.
-See the `pyproject.toml` or the `.github/workflows/pr.yml` to inspect which ruff format/linting checks are made, and which tests are executed.
+See the ``pyproject.toml`` or the ``.github/workflows/pr.yml`` to inspect which ruff format/linting checks are made, and which tests are executed.
 
 
 ## License
