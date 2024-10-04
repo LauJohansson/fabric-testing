@@ -237,7 +237,6 @@ def submit(args) -> str:
     print("Fabric-testing submit ran successfully!", file=sys.stderr)
 
     return _fetch_url
-    # return _fetch_url
 
 
 def main():
