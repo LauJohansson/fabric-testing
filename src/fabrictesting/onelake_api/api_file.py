@@ -1,4 +1,5 @@
 import os
+import sys
 import uuid
 from datetime import datetime
 
@@ -57,22 +58,28 @@ def upload_folder_to_onelake(
 
         print(
             f"Authenticating and getting the service "
-            f"client for workspace: {workspace_name}"
+            f"client for workspace: {workspace_name}",
+            file=sys.stderr,
         )
         # Step 1: Authenticate and get service
         # client using the provided token
         service_client = get_service_client()
 
-        print(f"Creating FileSystemClient for workspace: {workspace_name}")
+        print(
+            f"Creating FileSystemClient for workspace: {workspace_name}",
+            file=sys.stderr,
+        )
         # Step 2: Create FileSystemClient for the desired file system (workspace)
         file_system_client = service_client.get_file_system_client(
             file_system=workspace_name
         )
 
         print(
-            f"Starting to upload files from folder: {temp_folder} to {target_directory}"
+            f"Starting to upload files from folder:"
+            f" {temp_folder} to {target_directory}",
+            file=sys.stderr,
         )
-        print("=" * 50)
+        print("=" * 50, file=sys.stderr)
         # Step 3: Upload files from the temp folder to OneLake
         for root, _, files in os.walk(temp_folder):
             for file in files:
@@ -82,10 +89,11 @@ def upload_folder_to_onelake(
 
                 # Upload each file
                 upload_file_to_onelake(file_system_client, upload_path, file_path)
-        print("=" * 50)
+        print("=" * 50, file=sys.stderr)
         print(
             f"Successfully uploaded folder to "
-            f"{lakehouse_name}.Lakehouse/Files/fabric-testing/{_test_folder}"
+            f"{lakehouse_name}.Lakehouse/Files/fabric-testing/{_test_folder}",
+            file=sys.stderr,
         )
 
         return _test_folder
@@ -116,16 +124,19 @@ def upload_file_to_onelake(
     """
 
     try:
-        print(f"Creating DataLake file client for path: {destination_path}")
+        print(
+            f"Creating DataLake file client for path: {destination_path}",
+            file=sys.stderr,
+        )
         # Create a DataLake file client to interact with the destination path
         file_client = file_system_client.get_file_client(destination_path)
 
-        print(f"Preparing {local_file_path} for {destination_path}")
+        print(f"Preparing {local_file_path} for {destination_path}", file=sys.stderr)
         # Upload the file
         with open(local_file_path, "rb") as file_data:
             file_client.upload_data(file_data, overwrite=True)
 
-        print(f"Uploaded {local_file_path} to {destination_path}")
+        print(f"Uploaded {local_file_path} to {destination_path}", file=sys.stderr)
 
     except Exception as e:  # noqa: BLE001
         raise RuntimeError(f"Failed to upload file {local_file_path}: {str(e)}")

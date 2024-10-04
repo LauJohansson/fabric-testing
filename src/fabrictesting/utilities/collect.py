@@ -1,4 +1,5 @@
 import shutil
+import sys
 import tempfile
 from pathlib import Path
 from typing import Tuple
@@ -54,7 +55,7 @@ def create_temp_folder_with_files(
         else:
             _rqs_name = None
 
-        print(f"Temporary folder created at: {temp_dir}")
+        print(f"Temporary folder created at: {temp_dir}", file=sys.stderr)
         return temp_dir, _whl_name, _rqs_name
 
     except Exception as e:  # noqa: BLE001

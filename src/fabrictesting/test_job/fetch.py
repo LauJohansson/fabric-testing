@@ -122,8 +122,11 @@ def fetch(args):
 
     _fetch_url = args.url or load_fetch_url(args.fetch_url_log_file_path)
 
+    # with clear_output_from_powershell():
     result = poll_notebook_run_status(
-        fetch_url=_fetch_url, retry_after=args.retry_after, token_string=_fabric_token
+        fetch_url=_fetch_url,
+        retry_after=args.retry_after,
+        token_string=_fabric_token,
     )
 
     if result.get("status_code", None) == 200:

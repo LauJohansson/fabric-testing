@@ -1,4 +1,5 @@
 import argparse
+import sys
 import time
 
 from fabrictesting.fabric_api.api_access import (
@@ -155,7 +156,7 @@ def submit(args) -> str:
             CLI command for fetching the status and results of submitted tests.
     """
 
-    print("Starting fabric-testing submit...")
+    print("Starting fabric-testing submit...", file=sys.stderr)
 
     # 1 Create temp folder with wheel, tests and requirement file
     temp_dir, wheel_name, rqs_name = create_temp_folder_with_files(
@@ -207,7 +208,7 @@ def submit(args) -> str:
         token_string=_fabric_token,
     )
 
-    print("Give Fabric API 5 seconds to upload notebook...")
+    print("Give Fabric API 5 seconds to upload notebook...", file=sys.stderr)
     time.sleep(5)
 
     # 5 Retrieve the notebook id
@@ -229,18 +230,20 @@ def submit(args) -> str:
     if args.output_log_file_path:
         save_fetch_url_log(_fetch_url)
 
-    print(f"Notebook triggered with status {_run_status}")
-    print(f"Notebook has the name: {notebook_name}")
-    print(f"Notebook has id {notebook_id}")
-    print(f"Fetch results at {_fetch_url}")
-    print("Fabric-testing submit ran successfully!")
+    print(f"Notebook triggered with status {_run_status}", file=sys.stderr)
+    print(f"Notebook has the name: {notebook_name}", file=sys.stderr)
+    print(f"Notebook has id {notebook_id}", file=sys.stderr)
+    print(f"Fetch results at {_fetch_url}", file=sys.stderr)
+    print("Fabric-testing submit ran successfully!", file=sys.stderr)
+
     return _fetch_url
+    # return _fetch_url
 
 
 def main():
     """the main function of the cli command 'submit'. Not to be used directly."""
     args = submit_args()
-    submit(args)
+    return submit(args)
 
 
 if __name__ == "__main__":

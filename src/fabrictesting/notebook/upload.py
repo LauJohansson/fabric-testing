@@ -1,4 +1,5 @@
 import json
+import sys
 import time
 
 import requests
@@ -48,14 +49,14 @@ def upload_notebook(
         Fabric API documentation: https://learn.microsoft.com/en-us/rest/api/fabric/notebook/items/create-notebook?tabs=HTTP
     """
 
-    print("Prepare uploading notebook...")
-    print(f"    Display Name: {display_name}")
-    print(f"    To workspace with id: {workspace_id}")
+    print("Prepare uploading notebook...", file=sys.stderr)
+    print(f"    Display Name: {display_name}", file=sys.stderr)
+    print(f"    To workspace with id: {workspace_id}", file=sys.stderr)
 
-    print("Converting notebook payload to base64...")
+    print("Converting notebook payload to base64...", file=sys.stderr)
     _notebook_payload = convert_notebook_into_inlinebase64(notebook_definition)
 
-    print("Converting platform payload to base64...")
+    print("Converting platform payload to base64...", file=sys.stderr)
     _platform_payload = convert_platform_into_inlinebase64(platform_definition)
 
     data = {
@@ -83,18 +84,21 @@ def upload_notebook(
         "Authorization": f"Bearer {token_string}",
     }
 
-    print("Posting notebook...")
+    print("Posting notebook...", file=sys.stderr)
     response = requests.post(
         url=f"https://api.fabric.microsoft.com/v1/workspaces/{workspace_id}/notebooks",
         headers=header,
         data=json.dumps(data),
     )
-    print("Posting finished!")
+    print("Posting finished!", file=sys.stderr)
 
     if response.status_code == 201:
-        print("Notebook was successfully created!")
+        print("Notebook was successfully created!", file=sys.stderr)
     elif response.status_code == 202:
-        print("Notebook Request accepted, notebook provisioning in progress...")
+        print(
+            "Notebook Request accepted, notebook provisioning in progress...",
+            file=sys.stderr,
+        )
         # Extract Location header to check the notebook status
 
         location_url = response.headers.get("Location")
@@ -103,7 +107,10 @@ def upload_notebook(
         )  # Default to 20 seconds if not provided
 
         if location_url:
-            print(f"To check the status, polling the following URL: {location_url}")
+            print(
+                f"To check the status, polling the following URL: {location_url}",
+                file=sys.stderr,
+            )
 
             response_poll = poll_notebook_upload_status(
                 location_url, retry_after, token_string
@@ -113,7 +120,10 @@ def upload_notebook(
                 "content": response_poll.content,
             }
         else:
-            print("No Location header found in the response. Continues...")
+            print(
+                "No Location header found in the response. Continues...",
+                file=sys.stderr,
+            )
     else:
         raise Exception(
             f"Notebook upload failed with status code {response.status_code}"
@@ -160,7 +170,9 @@ def poll_notebook_upload_status(location_url: str, retry_after: int, token_strin
             return str(_percent_complete)
         except json.JSONDecodeError:
             # Handle non-JSON responses like errors
-            print("Could not retrieve percenComplete value. Continues...")
+            print(
+                "Could not retrieve percenComplete value. Continues...", file=sys.stderr
+            )
             return None
 
     headers = {
@@ -174,30 +186,41 @@ def poll_notebook_upload_status(location_url: str, retry_after: int, token_strin
             percent_complete = _retrieve_percent_complete(response.content)
 
             if percent_complete != "100":
-                print(f"Notebook creation is at {percent_complete}/100 %...")
-                print(f"Retrying after {retry_after} seconds...")
+                print(
+                    f"Notebook creation is at {percent_complete}/100 %...",
+                    file=sys.stderr,
+                )
+                print(f"Retrying after {retry_after} seconds...", file=sys.stderr)
                 time.sleep(retry_after)
             elif response.status_code == 200:
-                print(f"Notebook creation is at {percent_complete}/100 %!")
-                print("Notebook creation completed.")
+                print(
+                    f"Notebook creation is at {percent_complete}/100 %!",
+                    file=sys.stderr,
+                )
+                print("Notebook creation completed.", file=sys.stderr)
                 return response
             elif response.status_code == 202:
-                print(f"Notebook creation is at {percent_complete} percent...")
-                print("Notebook creation still in progress...")
+                print(
+                    f"Notebook creation is at {percent_complete} percent...",
+                    file=sys.stderr,
+                )
+                print("Notebook creation still in progress...", file=sys.stderr)
 
                 # Wait for the recommended time before retrying
-                print(f"Retrying after {retry_after} seconds...")
+                print(f"Retrying after {retry_after} seconds...", file=sys.stderr)
                 time.sleep(retry_after)
             else:
                 print(
                     f"Unexpected status code: {response.status_code},"
-                    f" details: {response.content}"
+                    f" details: {response.content}",
+                    file=sys.stderr,
                 )
                 break
         else:
             # For unexpected status codes, return the response and break the loop
             print(
                 f"Unexpected status code: {response.status_code}, "
-                f"details: {response.content}"
+                f"details: {response.content}",
+                file=sys.stderr,
             )
             return response  # Ensures the loop is exited for unexpected status codes

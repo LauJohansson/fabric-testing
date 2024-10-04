@@ -1,4 +1,5 @@
 import json
+import sys
 
 import requests
 
@@ -32,7 +33,7 @@ def list_notebooks(*, workspace_id: str, token_string: str):
         "Authorization": f"Bearer {token_string}",
     }
 
-    print("Get notebook definitions...")
+    print("Get notebook definitions...", file=sys.stderr)
     response = requests.get(
         url=f"https://api.fabric.microsoft.com/v1/workspaces/{workspace_id}/notebooks",
         headers=header,

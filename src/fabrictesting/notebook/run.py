@@ -1,3 +1,5 @@
+import sys
+
 import requests
 
 
@@ -48,7 +50,7 @@ def run_notebook(
         "Authorization": f"Bearer {token_string}",
     }
 
-    print("Trigger notebook...")
+    print("Trigger notebook...", file=sys.stderr)
     response = requests.post(
         url=f"https://api.fabric.microsoft.com/v1/workspaces/{workspace_id}/items/{item_id}/jobs/instances?jobType={job_type}",
         headers=header,
@@ -64,7 +66,7 @@ def run_notebook(
             f"Triggering notebook failed with {status_code}: {str(response.content)}"
         )
 
-    print("Trigger finished!")
+    print("Trigger finished!", file=sys.stderr)
 
     return {
         "status_code": response.status_code,

@@ -1,3 +1,4 @@
+import sys
 import time
 
 import requests
@@ -21,14 +22,15 @@ def handle_successful_response(response: requests.Response) -> dict:
         raise Exception("There was no job_status in the fetch url response")
 
     if job_status == "Completed":
-        print("Notebook job completed successfully.")
+        print("Notebook job completed successfully.", file=sys.stderr)
+
         return {"status_code": response.status_code, "content": response.content}
 
     elif job_status == "Failed":
         return handle_failed_job(response_data, response)
 
     else:
-        print("Notebook job is still in progress...")
+        print("Notebook job is still in progress...", file=sys.stderr)
         return None  # Job still running
 
 
@@ -54,11 +56,11 @@ def handle_failed_job(response_data: dict, response: requests.Response) -> dict:
         raise Exception("There was no message in the fetch url response")
 
     if "No notebook execution state found" in response_message:
-        print("No execution state found, retrying...")
+        print("No execution state found, retrying...", file=sys.stderr)
     else:
-        print("Failure reason unknown, returning...")
-        print(f"Status code: {response.status_code}")
-        print(f"Content: {str(response.content)}")
+        print("Failure reason unknown, returning...", file=sys.stderr)
+        print(f"Status code: {response.status_code}", file=sys.stderr)
+        print(f"Content: {str(response.content)}", file=sys.stderr)
         return {"status_code": response.status_code, "content": response.content}
 
     return None  # To signify retry
@@ -75,11 +77,12 @@ def handle_non_successful_response(response: requests.Response) -> dict:
         dict: The status and content when an unexpected status code is encountered.
     """
     if response.status_code == 202:
-        print("Job still running, retrying...")
+        print("Job still running, retrying...", file=sys.stderr)
         return None  # Job still running
 
     print(
-        f"Unexpected status code: {response.status_code}. Response: {response.content}"
+        f"Unexpected status code: {response.status_code}. Response: {response.content}",
+        file=sys.stderr,
     )
     return {"status_code": response.status_code, "content": response.content}
 
